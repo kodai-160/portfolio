@@ -12,7 +12,7 @@ export default function Home() {
         transition={{ duration: 0.8, ease: "easeOut" }}
         className="text-4xl font-bold"
       >
-        こんにちは、世界！
+       Kodaiのportfolio
       </motion.h1>
     </div>
   );
