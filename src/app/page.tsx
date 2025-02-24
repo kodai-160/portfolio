@@ -1,10 +1,9 @@
 "use client";
 import Link from "next/link";
-import { Swiper, SwiperSlide } from "swiper/react";
+import Image from "next/image";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
-import { Autoplay, Pagination, Navigation } from "swiper/modules";
 
 export default function Home() {
   return (
@@ -31,17 +30,17 @@ export default function Home() {
       {/* 無限スクロールエリア */}
       <div className="w-full overflow-hidden">
         <div className="flex gap-4 animate-scroll">
-          <img src="/images/minicamp.jpg" alt="スライド1" className="w-1/3 h-64 object-cover rounded-lg" />
-          <img src="/images/secprj.png" alt="スライド2" className="w-1/3 h-64 object-cover rounded-lg" />
-          <img src="/images/X.png" alt="スライド3" className="w-1/3 h-64 object-cover rounded-lg" />
-          <img src="/images/github.png" alt="スライド4" className="w-1/3 h-64 object-cover rounded-lg" />
-          <img src="/images/icon.png" alt="スライド5" className="w-1/3 h-64 object-cover rounded-lg" />
+          <Image src="/images/minicamp.jpg" alt="スライド1" className="w-1/3 h-64 object-cover rounded-lg" />
+          <Image src="/images/secprj.png" alt="スライド2" className="w-1/3 h-64 object-cover rounded-lg" />
+          <Image src="/images/X.png" alt="スライド3" className="w-1/3 h-64 object-cover rounded-lg" />
+          <Image src="/images/github.png" alt="スライド4" className="w-1/3 h-64 object-cover rounded-lg" />
+          <Image src="/images/icon.png" alt="スライド5" className="w-1/3 h-64 object-cover rounded-lg" />
           {/* 同じ画像を複製して無限スクロール */}
-          <img src="/images/minicamp.jpg" alt="スライド1" className="w-1/3 h-64 object-cover rounded-lg" />
-          <img src="/images/secprj.png" alt="スライド2" className="w-1/3 h-64 object-cover rounded-lg" />
-          <img src="/images/X.png" alt="スライド3" className="w-1/3 h-64 object-cover rounded-lg" />
-          <img src="/images/github.png" alt="スライド4" className="w-1/3 h-64 object-cover rounded-lg" />
-          <img src="/images/icon.png" alt="スライド5" className="w-1/3 h-64 object-cover rounded-lg" />
+          <Image src="/images/minicamp.jpg" alt="スライド1" className="w-1/3 h-64 object-cover rounded-lg" />
+          <Image src="/images/secprj.png" alt="スライド2" className="w-1/3 h-64 object-cover rounded-lg" />
+          <Image src="/images/X.png" alt="スライド3" className="w-1/3 h-64 object-cover rounded-lg" />
+          <Image src="/images/github.png" alt="スライド4" className="w-1/3 h-64 object-cover rounded-lg" />
+          <Image src="/images/icon.png" alt="スライド5" className="w-1/3 h-64 object-cover rounded-lg" />
         </div>
       </div>
 
