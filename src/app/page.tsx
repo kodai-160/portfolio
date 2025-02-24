@@ -1,19 +1,92 @@
 "use client";
-
-import Image from "next/image";
-import { motion } from "framer-motion";
+import Link from "next/link";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+import { Autoplay, Pagination, Navigation } from "swiper/modules";
 
 export default function Home() {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <motion.h1
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="text-4xl font-bold"
-      >
-       Kodaiのportfolio
-      </motion.h1>
-    </div>
+    <>
+      <div className="w-full px-5">
+        <section className="flex flex-row items-center justify-between mt-4 mb-12 md:mb-12 relative">
+          {/* 左側 (Kodaiの portfolio.) */}
+          <div className="relative flex flex-col">
+            <span className="block text-[32px] text-black translate-y-[10px] pl-1">
+              Kodaiの
+            </span>
+            <h1 className="text-5xl md:text-8xl font-bold tracking-tighter leading-tight">
+              portfolio.
+            </h1>
+          </div>
+
+          {/* 右側 (説明文) */}
+          <p className="text-lg text-black md:text-right">
+            Next.js初心者が作ったポートフォリオサイトです。
+          </p>
+        </section>
+      </div>
+    
+      {/* 無限スクロールエリア */}
+      <div className="w-full overflow-hidden">
+        <div className="flex gap-4 animate-scroll">
+          <img src="/images/minicamp.jpg" alt="スライド1" className="w-1/3 h-64 object-cover rounded-lg" />
+          <img src="/images/secprj.png" alt="スライド2" className="w-1/3 h-64 object-cover rounded-lg" />
+          <img src="/images/X.png" alt="スライド3" className="w-1/3 h-64 object-cover rounded-lg" />
+          <img src="/images/github.png" alt="スライド4" className="w-1/3 h-64 object-cover rounded-lg" />
+          <img src="/images/icon.png" alt="スライド5" className="w-1/3 h-64 object-cover rounded-lg" />
+          {/* 同じ画像を複製して無限スクロール */}
+          <img src="/images/minicamp.jpg" alt="スライド1" className="w-1/3 h-64 object-cover rounded-lg" />
+          <img src="/images/secprj.png" alt="スライド2" className="w-1/3 h-64 object-cover rounded-lg" />
+          <img src="/images/X.png" alt="スライド3" className="w-1/3 h-64 object-cover rounded-lg" />
+          <img src="/images/github.png" alt="スライド4" className="w-1/3 h-64 object-cover rounded-lg" />
+          <img src="/images/icon.png" alt="スライド5" className="w-1/3 h-64 object-cover rounded-lg" />
+        </div>
+      </div>
+
+      {/* ナビゲーションを中央配置 */}
+      <nav className="w-full flex justify-center items-center mt-16 py-6">
+        <ul className="flex gap-8 text-gray-600 text-lg font-medium">
+          <li>
+            <Link href="/introduce" className="hover:text-black border-b-2 border-transparent hover:border-black cursor-pointer">
+              自己紹介
+            </Link>
+          </li>
+          <li>
+            <Link href="/skill" className="hover:text-black border-b-2 border-transparent hover:border-black cursor-pointer">
+              スキル
+            </Link>
+          </li>
+          <li>
+            <Link href="/event" className="hover:text-black border-b-2 border-transparent hover:border-black cursor-pointer">
+              イベント参加履歴
+            </Link>
+          </li>
+          <li>
+            <Link href="/blog" className="hover:text-black border-b-2 border-transparent hover:border-black cursor-pointer">
+              ブログ
+            </Link>
+          </li>
+        </ul>
+      </nav>
+
+      <style jsx>{`
+        @keyframes scroll {
+          from {
+            transform: translateX(0);
+          }
+          to {
+            transform: translateX(-50%);
+          }
+        }
+
+        .animate-scroll {
+          display: flex;
+          white-space: nowrap;
+          animation: scroll 20s linear infinite;
+        }
+      `}</style>
+    </>
   );
 }
