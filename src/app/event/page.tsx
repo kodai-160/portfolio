@@ -27,6 +27,10 @@ const timelineData: YearGroup[] = [
     year: "2023",
     events: [
       {
+        date: "2023/09/14〜09/17",
+        title: "KITハッカソン2023 参加"
+      },
+      {
         date: "2023/12/02",
         title: "セキュリティ・ミニキャンプ in 石川",
       },
@@ -70,13 +74,21 @@ const timelineData: YearGroup[] = [
 ];
 
 export default function EventTimeline() {
+    const sortedTimelineData = [...timelineData]
+      .sort((a, b) => Number(b.year) - Number(a.year))
+      .map((group) => ({
+        ...group,
+        events: [...group.events].sort(
+          (a, b) => new Date(b.date.split("〜")[0]).getTime() - new Date(a.date.split("〜")[0]).getTime()
+        ),
+      }));
+  
     return (
       <div className="bg-white text-gray-800 px-6 py-12">
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl font-bold mb-8">イベント参加歴</h2>
-  
+          <h2 className="text-3xl font-bold mb-8">イベント参加履歴</h2>
           <div className="space-y-10">
-            {timelineData.map((group) => (
+            {sortedTimelineData.map((group) => (
               <div key={group.year}>
                 <h3 className="text-2xl font-semibold text-blue-600 mb-4 border-b border-blue-200 pb-1">
                   {group.year}
@@ -84,19 +96,15 @@ export default function EventTimeline() {
                 <ul className="space-y-3 pl-3 border-l-2 border-gray-300 relative">
                   {group.events.map((event, idx) => (
                     <li key={idx} className="pl-5 relative">
-                      {/* 点 */}
                       <span className="absolute left-[-0.4rem] top-1.5 w-2 h-2 bg-blue-400 rounded-full"></span>
   
-                      {/* イベント内容 */}
                       <p className="font-medium">{event.title}</p>
                       <p className="text-sm text-gray-600">{event.date}</p>
   
-                      {/* 説明（あれば） */}
                       {event.description && (
                         <p className="text-sm text-gray-500">{event.description}</p>
                       )}
   
-                      {/* URLリンク（あれば） */}
                       {event.url && (
                         <Link
                           href={event.url}

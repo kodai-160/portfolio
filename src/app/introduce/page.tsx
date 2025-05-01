@@ -1,9 +1,6 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  Twitter,
-} from "lucide-react";
 
 export default function Introduce() {
   return (
@@ -21,7 +18,7 @@ export default function Introduce() {
           <h1 className="text-4xl font-bold mb-6 text-center text-blue-600 border-b-2 border-blue-300 pb-2">
             sugimori kodai
           </h1>
-          <ul className="space-y-4 text-gray-700">
+          <ul className="space-y-4 text-black-700">
             <li className="flex items-center text-lg">
               出身：石川県
             </li>
@@ -45,14 +42,36 @@ export default function Introduce() {
             <li className="flex items-center text-lg">
               興味分野：webセキュリティ、Network、クラウド
             </li>
-            <li className="flex items-center text-lg">
-              <Twitter className="mr-2 text-blue-500" size={20} />
+            <li className="flex items-center text-lg gap-2">
+              <Image
+                src="/images/X.png"
+                alt="X"
+                width={20}
+                height={20}
+              />
               <Link
                 href="https://x.com/kodai_06_it"
                 target="_blank"
-                className="text-blue-500 underline hover:text-blue-700"
+                rel="noopener noreferrer"
+                className="text-blue-500 hover:underline break-all"
               >
-                @kodai_06_it
+                https://x.com/kodai_06_it
+              </Link>
+            </li>
+            <li className="flex items-center text-lg gap-2">
+              <Image
+                src="/images/github.png"
+                alt="github"
+                width={20}
+                height={20}
+              />
+              <Link
+                href="https://github.com/kodai-160"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 hover:underline break-all"
+              >
+                https://github.com/kodai-160
               </Link>
             </li>
           </ul>
