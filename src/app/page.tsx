@@ -20,27 +20,25 @@ export default function Home() {
             </h1>
           </div>
 
-          {/* 右側 (説明文) */}
-          <p className="text-lg text-black md:text-right">
-            Next.js初心者が作ったポートフォリオサイトです。
-          </p>
         </section>
       </div>
-    
+
       {/* 無限スクロールエリア */}
       <div className="w-full overflow-hidden">
         <div className="flex gap-4 animate-scroll">
-          <Image src="/images/minicamp.jpg" alt="スライド1" className="w-1/3 h-64 object-cover rounded-lg" />
-          <Image src="/images/secprj.png" alt="スライド2" className="w-1/3 h-64 object-cover rounded-lg" />
-          <Image src="/images/X.png" alt="スライド3" className="w-1/3 h-64 object-cover rounded-lg" />
-          <Image src="/images/github.png" alt="スライド4" className="w-1/3 h-64 object-cover rounded-lg" />
-          <Image src="/images/icon.png" alt="スライド5" className="w-1/3 h-64 object-cover rounded-lg" />
-          {/* 同じ画像を複製して無限スクロール */}
-          <Image src="/images/minicamp.jpg" alt="スライド1" className="w-1/3 h-64 object-cover rounded-lg" />
-          <Image src="/images/secprj.png" alt="スライド2" className="w-1/3 h-64 object-cover rounded-lg" />
-          <Image src="/images/X.png" alt="スライド3" className="w-1/3 h-64 object-cover rounded-lg" />
-          <Image src="/images/github.png" alt="スライド4" className="w-1/3 h-64 object-cover rounded-lg" />
-          <Image src="/images/icon.png" alt="スライド5" className="w-1/3 h-64 object-cover rounded-lg" />
+          {/* 画像たちにwidth/heightを追加 */}
+          <Image src="/images/minicamp.jpg" alt="スライド1" width={400} height={256} className="w-1/3 h-64 object-cover rounded-lg" />
+          <Image src="/images/secprj.png" alt="スライド2" width={400} height={256} className="w-1/3 h-64 object-cover rounded-lg" />
+          <Image src="/images/X.png" alt="スライド3" width={400} height={256} className="w-1/3 h-64 object-cover rounded-lg" />
+          <Image src="/images/github.png" alt="スライド4" width={400} height={256} className="w-1/3 h-64 object-cover rounded-lg" />
+          <Image src="/images/icon.png" alt="スライド5" width={400} height={256} className="w-1/3 h-64 object-cover rounded-lg" />
+          
+          {/* 複製画像も同様に */}
+          <Image src="/images/minicamp.jpg" alt="スライド1" width={400} height={256} className="w-1/3 h-64 object-cover rounded-lg" />
+          <Image src="/images/secprj.png" alt="スライド2" width={400} height={256} className="w-1/3 h-64 object-cover rounded-lg" />
+          <Image src="/images/X.png" alt="スライド3" width={400} height={256} className="w-1/3 h-64 object-cover rounded-lg" />
+          <Image src="/images/github.png" alt="スライド4" width={400} height={256} className="w-1/3 h-64 object-cover rounded-lg" />
+          <Image src="/images/icon.png" alt="スライド5" width={400} height={256} className="w-1/3 h-64 object-cover rounded-lg" />
         </div>
       </div>
 
