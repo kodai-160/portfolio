@@ -6,6 +6,8 @@ export default function Skill() {
     <div className="min-h-screen bg-white text-gray-800 px-6 py-12">
       <div className="max-w-3xl mx-auto">
         <h2 className="text-3xl font-bold mb-8">スキル一覧</h2>
+        <p>※勉強中のものも含まれています</p>
+
 
         <div className="space-y-6">
           <SkillBlock
