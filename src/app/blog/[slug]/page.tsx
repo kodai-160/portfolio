@@ -8,8 +8,14 @@ import { getLocalBlogPosts } from '@/lib/blog';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
+type Params = {
+  params: {
+    slug: string;
+  };
+};
+
 // 動的メタデータの生成
-export async function generateMetadata({ params }: { params: any }): Promise<Metadata> {
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
 	// await params before using its properties
 	const { slug } = await params;
 	const post = await getBlogPostBySlug(slug);
@@ -52,7 +58,7 @@ function getBlogPostBySlug(slug: string) {
 }
 
 // ブログ詳細ページのコンポーネント
-export default async function BlogPost({ params }: { params: any }) {
+export default async function BlogPost({ params }: Params) {
 	const { slug } = await params;
 	const post = await getBlogPostBySlug(slug);
 	
