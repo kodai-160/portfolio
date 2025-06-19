@@ -1,9 +1,6 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/navigation";
 
 export default function Home() {
   return (
@@ -12,14 +9,13 @@ export default function Home() {
         <section className="flex flex-row items-center justify-between mt-4 mb-12 md:mb-12 relative">
           {/* 左側 (Kodaiの portfolio.) */}
           <div className="relative flex flex-col">
-            <span className="block text-[32px] text-black translate-y-[10px] pl-1">
+            <span className="block text-[32px] text-black dark:text-white translate-y-[10px] pl-1">
               Kodaiの
             </span>
-            <h1 className="text-5xl md:text-8xl font-bold tracking-tighter leading-tight">
+            <h1 className="text-5xl md:text-8xl font-bold tracking-tighter leading-tight text-black dark:text-white">
               portfolio.
             </h1>
           </div>
-
         </section>
       </div>
 
@@ -44,24 +40,24 @@ export default function Home() {
 
       {/* ナビゲーションを中央配置 */}
       <nav className="w-full flex justify-center items-center mt-16 py-6">
-        <ul className="flex gap-8 text-gray-600 text-lg font-medium">
+        <ul className="flex gap-8 text-gray-600 dark:text-gray-400 text-lg font-medium">
           <li>
-            <Link href="/introduce" className="hover:text-black border-b-2 border-transparent hover:border-black cursor-pointer">
+            <Link href="/introduce" className="hover:text-black dark:hover:text-white border-b-2 border-transparent hover:border-black dark:hover:border-white cursor-pointer">
               自己紹介
             </Link>
           </li>
           <li>
-            <Link href="/skill" className="hover:text-black border-b-2 border-transparent hover:border-black cursor-pointer">
+            <Link href="/skill" className="hover:text-black dark:hover:text-white border-b-2 border-transparent hover:border-black dark:hover:border-white cursor-pointer">
               スキル
             </Link>
           </li>
           <li>
-            <Link href="/event" className="hover:text-black border-b-2 border-transparent hover:border-black cursor-pointer">
+            <Link href="/event" className="hover:text-black dark:hover:text-white border-b-2 border-transparent hover:border-black dark:hover:border-white cursor-pointer">
               イベント参加履歴
             </Link>
           </li>
           <li>
-            <Link href="/blog" className="hover:text-black border-b-2 border-transparent hover:border-black cursor-pointer">
+            <Link href="/blog" className="hover:text-black dark:hover:text-white border-b-2 border-transparent hover:border-black dark:hover:border-white cursor-pointer">
               ブログ
             </Link>
           </li>

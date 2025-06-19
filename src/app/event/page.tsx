@@ -84,25 +84,25 @@ export default function EventTimeline() {
       }));
   
     return (
-      <div className="bg-white text-gray-800 px-6 py-12">
+      <div className="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 px-6 py-12">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-3xl font-bold mb-8">イベント参加履歴</h2>
           <div className="space-y-10">
             {sortedTimelineData.map((group) => (
               <div key={group.year}>
-                <h3 className="text-2xl font-semibold text-blue-600 mb-4 border-b border-blue-200 pb-1">
+                <h3 className="text-2xl font-semibold text-blue-600 dark:text-blue-400 mb-4 border-b border-blue-200 dark:border-blue-700 pb-1">
                   {group.year}
                 </h3>
-                <ul className="space-y-3 pl-3 border-l-2 border-gray-300 relative">
+                <ul className="space-y-3 pl-3 border-l-2 border-gray-300 dark:border-gray-700 relative">
                   {group.events.map((event, idx) => (
                     <li key={idx} className="pl-5 relative">
-                      <span className="absolute left-[-0.4rem] top-1.5 w-2 h-2 bg-blue-400 rounded-full"></span>
+                      <span className="absolute left-[-0.4rem] top-1.5 w-2 h-2 bg-blue-400 dark:bg-blue-600 rounded-full"></span>
   
                       <p className="font-medium">{event.title}</p>
-                      <p className="text-sm text-gray-600">{event.date}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">{event.date}</p>
   
                       {event.description && (
-                        <p className="text-sm text-gray-500">{event.description}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">{event.description}</p>
                       )}
   
                       {event.url && (
@@ -110,7 +110,7 @@ export default function EventTimeline() {
                           href={event.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-sm text-blue-600 hover:underline"
+                          className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
                         >
                           🔗 デモ動画
                         </Link>
@@ -125,4 +125,3 @@ export default function EventTimeline() {
       </div>
     );
   }
-  

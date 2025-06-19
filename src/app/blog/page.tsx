@@ -1,48 +1,11 @@
-"use client";
 import Link from "next/link";
-
-type BlogPost = {
-  title: string;
-  date: string;
-  url: string;
-};
-
-const blogPosts: BlogPost[] = [
-  {
-    title: "JANOG55 NETCON問題解説(Level3-6)",
-    date: "2025/01/27",
-    url: "https://note.com/kodai_06/n/nb70813433990",
-  },
-  {
-    title: "学内CTF writeup",
-    date: "2025/01/16",
-    url: "https://qiita.com/kodai-160/items/db64183ba140f7118f9c",
-  },
-  {
-    title: "Cisco Packet Tracerを使ってRIPルーティング",
-    date: "2024/11/19",
-    url: "https://qiita.com/kodai-160/items/7c1e353fbe303290c38e",
-  },
-  {
-    title: "VulnHubのセットアップ方法",
-    date: "2024/04/20",
-    url: "https://qiita.com/kodai-160/items/c162e4741315dcf737e9",
-  },
-  {
-    title: "HTTP request smugglingについて",
-    date: "2023/12/03",
-    url: "https://qiita.com/kodai-160/items/735393514a8377c50a4e",
-  },
-  {
-    title: "TsukuCTF2023 Write up",
-    date: "2023/11/11",
-    url: "https://qiita.com/kodai-160/items/e039dfe99e37a46eb54a",
-  },
-];
+import { getAllBlogPosts } from "@/lib/blog";
 
 export default function BlogPage() {
+  const blogPosts = getAllBlogPosts();
+
   return (
-    <main className="min-h-screen bg-white text-gray-800 px-6 py-12">
+    <main className="min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 px-6 py-12">
       <div className="max-w-5xl mx-auto">
         <h1 className="text-3xl font-bold mb-8 text-center">ブログ一覧</h1>
 
@@ -50,18 +13,61 @@ export default function BlogPage() {
           {blogPosts.map((post, idx) => (
             <div
               key={idx}
-              className="border rounded-lg shadow-md overflow-hidden hover:shadow-lg transition"
+              className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition"
             >
               <div className="p-5">
-                <h2 className="text-xl font-semibold mb-1">{post.title}</h2>
-                <p className="text-sm text-gray-500 mb-2">{post.date}</p>
+                <div className="flex items-center gap-2 mb-2">
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+                    {post.title}
+                  </h2>
+                  {post.isLocal && (
+                    <span className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs px-2 py-1 rounded">
+                      Local
+                    </span>
+                  )}
+                </div>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                  {post.date}
+                </p>
+
                 <Link
-                  href={post.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:underline text-sm font-medium"
+                  href={post.isLocal ? `/blog/${post.slug}` : post.url!}
+                  target={post.isLocal ? "_self" : "_blank"}
+                  rel={post.isLocal ? "" : "noopener noreferrer"}
+                  className="text-blue-600 dark:text-blue-400 hover:underline text-sm font-medium inline-flex items-center"
                 >
-                  記事を読む →
+                  記事を読む
+                  {post.isLocal ? (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 ml-1"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  ) : (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 ml-1"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                      />
+                    </svg>
+                  )}
                 </Link>
               </div>
             </div>
