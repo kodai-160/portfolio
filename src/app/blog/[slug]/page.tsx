@@ -7,7 +7,6 @@ import { Metadata } from 'next';
 import { getLocalBlogPosts } from '@/lib/blog';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import type { Components } from 'react-markdown';
 
 type Params = Promise<{
   slug: string;
@@ -94,9 +93,9 @@ export default async function BlogPost({ params }: { params: Params }) {
 								ul: (props) => <ul className="list-disc pl-6 mb-4 text-gray-800 dark:text-gray-200" {...props} />,
 								ol: (props) => <ol className="list-decimal pl-6 mb-4 text-gray-800 dark:text-gray-200" {...props} />,
 								li: (props) => <li className="mb-1 text-gray-800 dark:text-gray-200" {...props} />,
-								code: ({ inline, className, children, ...props }) => {
+								code: ({ node, className, children, ...props }) => {
 									const match = /language-(\w+)/.exec(className || '');
-									return !inline && match ? (
+									return match ? (
 										<pre className="bg-gray-100 dark:bg-gray-800 p-4 rounded overflow-x-auto mb-4">
 											<code className={className} {...props}>{children}</code>
 										</pre>
