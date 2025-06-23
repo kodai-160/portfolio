@@ -7,18 +7,16 @@ import { Metadata } from 'next';
 import { getLocalBlogPosts } from '@/lib/blog';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import type { Components } from 'react-markdown';
 
-type Params = {
-  params: {
-    slug: string;
-  };
-};
+type Params = Promise<{
+  slug: string;
+}>;
 
 // 動的メタデータの生成
-export async function generateMetadata({ params }: Params): Promise<Metadata> {
-	// await params before using its properties
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
 	const { slug } = await params;
-	const post = await getBlogPostBySlug(slug);
+	const post = getBlogPostBySlug(slug);
 	if (!post) {
 		notFound();
 	}
@@ -58,9 +56,9 @@ function getBlogPostBySlug(slug: string) {
 }
 
 // ブログ詳細ページのコンポーネント
-export default async function BlogPost({ params }: Params) {
+export default async function BlogPost({ params }: { params: Params }) {
 	const { slug } = await params;
-	const post = await getBlogPostBySlug(slug);
+	const post = getBlogPostBySlug(slug);
 	
 	if (!post) {
 		notFound();
@@ -89,24 +87,14 @@ export default async function BlogPost({ params }: Params) {
 						<ReactMarkdown 
 							remarkPlugins={[remarkGfm]}
 							components={{
-								h1: ({ ...props}) => <h1 className="text-2xl font-bold mt-8 mb-4 text-gray-900 dark:text-gray-100" {...props} />,
-								h2: ({ ...props}) => <h2 className="text-xl font-bold mt-6 mb-3 text-gray-900 dark:text-gray-100" {...props} />,
-								h3: ({ ...props}) => <h3 className="text-lg font-bold mt-4 mb-2 text-gray-900 dark:text-gray-100" {...props} />,
-								p: ({ ...props}) => <p className="mb-4 leading-relaxed text-gray-800 dark:text-gray-200" {...props} />,
-								ul: ({ ...props}) => <ul className="list-disc pl-6 mb-4 text-gray-800 dark:text-gray-200" {...props} />,
-								ol: ({ ...props}) => <ol className="list-decimal pl-6 mb-4 text-gray-800 dark:text-gray-200" {...props} />,
-								li: ({ ...props}) => <li className="mb-1 text-gray-800 dark:text-gray-200" {...props} />,
-								code: ({
-									inline,
-									className,
-									children,
-									...props
-								}: {
-									inline?: boolean;
-									className?: string;
-									children?: React.ReactNode;
-									[key: string]: any;
-								}) => {
+								h1: (props) => <h1 className="text-2xl font-bold mt-8 mb-4 text-gray-900 dark:text-gray-100" {...props} />,
+								h2: (props) => <h2 className="text-xl font-bold mt-6 mb-3 text-gray-900 dark:text-gray-100" {...props} />,
+								h3: (props) => <h3 className="text-lg font-bold mt-4 mb-2 text-gray-900 dark:text-gray-100" {...props} />,
+								p: (props) => <p className="mb-4 leading-relaxed text-gray-800 dark:text-gray-200" {...props} />,
+								ul: (props) => <ul className="list-disc pl-6 mb-4 text-gray-800 dark:text-gray-200" {...props} />,
+								ol: (props) => <ol className="list-decimal pl-6 mb-4 text-gray-800 dark:text-gray-200" {...props} />,
+								li: (props) => <li className="mb-1 text-gray-800 dark:text-gray-200" {...props} />,
+								code: ({ inline, className, children, ...props }) => {
 									const match = /language-(\w+)/.exec(className || '');
 									return !inline && match ? (
 										<pre className="bg-gray-100 dark:bg-gray-800 p-4 rounded overflow-x-auto mb-4">
@@ -116,8 +104,8 @@ export default async function BlogPost({ params }: Params) {
 										<code className="bg-gray-100 dark:bg-gray-700 px-1 py-0.5 rounded text-sm text-gray-800 dark:text-gray-200" {...props}>{children}</code>
 									);
 								},
-								a: ({ ...props}) => <a className="text-blue-600 dark:text-blue-400 hover:underline" {...props} />,
-								blockquote: ({ ...props}) => <blockquote className="border-l-4 border-blue-300 dark:border-blue-700 pl-4 italic mb-4 text-gray-700 dark:text-gray-300" {...props} />,
+								a: (props) => <a className="text-blue-600 dark:text-blue-400 hover:underline" {...props} />,
+								blockquote: (props) => <blockquote className="border-l-4 border-blue-300 dark:border-blue-700 pl-4 italic mb-4 text-gray-700 dark:text-gray-300" {...props} />,
 							}}
 						>
 							{post.content}
