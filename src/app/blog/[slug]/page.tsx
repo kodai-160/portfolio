@@ -93,7 +93,7 @@ export default async function BlogPost({ params }: { params: Params }) {
 								ul: (props) => <ul className="list-disc pl-6 mb-4 text-gray-800 dark:text-gray-200" {...props} />,
 								ol: (props) => <ol className="list-decimal pl-6 mb-4 text-gray-800 dark:text-gray-200" {...props} />,
 								li: (props) => <li className="mb-1 text-gray-800 dark:text-gray-200" {...props} />,
-								code: ({ node, className, children, ...props }) => {
+								code: ({ className, children, ...props }) => {
 									const match = /language-(\w+)/.exec(className || '');
 									return match ? (
 										<pre className="bg-gray-100 dark:bg-gray-800 p-4 rounded overflow-x-auto mb-4">
