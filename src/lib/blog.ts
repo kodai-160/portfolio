@@ -14,6 +14,13 @@ export type BlogPost = {
 
 // 外部ブログ記事の定義
 export const externalPosts: BlogPost[] = [
+    {
+    slug: 'seccamp',
+    title: "セキュリティキャンプ2025 B【プロダクトセキュリティクラス】 応募課題晒し",
+    date: "2025/06/26",
+    url: "https://zenn.dev/kodai_160/articles/54cd845cc91a77",
+    isLocal: false,
+  },
   {
     slug: 'janog55-netcon',
     title: "JANOG55 NETCON問題解説(Level3-6)",

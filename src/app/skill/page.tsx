@@ -13,7 +13,6 @@ export default function Skill() {
             title="Frontend"
             skills={[
               { name: "JavaScript", icon: "javascript.svg" },
-              { name: "TypeScript", icon: "typescript.svg" },
               { name: "React", icon: "react.svg" },
               { name: "HTML", icon: "html5.svg" },
               { name: "CSS", icon: "css.svg" },
@@ -23,6 +22,7 @@ export default function Skill() {
             title="Backend"
             skills={[
               { name: "Node.js", icon: "nodedotjs.svg" },
+              { name: "TypeScript", icon: "typescript.svg" },
               { name: "Python", icon: "python.svg" },
               { name: "php", icon: "php.svg" },
               { name: "Java", icon: "java.png" },
