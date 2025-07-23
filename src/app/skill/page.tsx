@@ -3,12 +3,16 @@ import Image from "next/image";
 
 export default function Skill() {
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 px-6 py-12">
-      <div className="max-w-3xl mx-auto">
-        <h2 className="text-3xl font-bold mb-8">スキル一覧</h2>
-        <p>※勉強中のものも含まれています</p>
+    <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
+      <div className="max-w-4xl mx-auto">
+        <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-center">
+          スキル一覧
+        </h2>
+        <p className="text-center mb-6 text-sm sm:text-base">
+          ※勉強中のものも含まれています
+        </p>
 
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           <SkillBlock
             title="Frontend"
             skills={[
@@ -66,23 +70,24 @@ function SkillBlock({
   skills: { name: string; icon: string }[];
 }) {
   return (
-    <div className="border rounded-xl shadow-md p-4 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
-      <h3 className="text-xl font-semibold mb-3">{title}</h3>
-      <div className="flex flex-wrap gap-3">
+    <div className="border rounded-xl shadow-md p-3 sm:p-4 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+      <h3 className="text-lg sm:text-xl font-semibold mb-2 sm:mb-3">{title}</h3>
+      <div className="flex flex-wrap gap-2 sm:gap-3">
         {skills.map((skill) => (
           <span
             key={skill.name}
-            className={`flex items-center gap-2 text-sm px-4 py-1 rounded-full shadow-sm ${getSkillColor(
+            className={`flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4 py-1 rounded-full shadow-sm ${getSkillColor(
               skill.name
             )}`}
           >
             <Image
               src={`/icons/${skill.icon}`}
               alt={`${skill.name} icon`}
-              width={16}
-              height={16}
+              width={14}
+              height={14}
+              className="sm:w-4 sm:h-4"
             />
-            {skill.name}
+            <span className="whitespace-nowrap">{skill.name}</span>
           </span>
         ))}
       </div>

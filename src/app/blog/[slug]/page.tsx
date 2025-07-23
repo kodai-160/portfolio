@@ -64,47 +64,47 @@ export default async function BlogPost({ params }: { params: Params }) {
 	}
 
 	return (
-		<main className="min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 px-6 py-12">
+		<main className="min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
 			<div className="max-w-4xl mx-auto">
 				<Link 
 					href="/blog" 
-					className="text-blue-600 dark:text-blue-400 hover:underline mb-6 inline-flex items-center"
+					className="text-blue-600 dark:text-blue-400 hover:underline mb-4 sm:mb-6 inline-flex items-center text-sm sm:text-base"
 				>
-					<svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 sm:h-4 sm:w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 						<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
 					</svg>
 					ブログ一覧に戻る
 				</Link>
 				
-				<article className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 border border-gray-200 dark:border-gray-700">
-					<header className="mb-8 border-b border-gray-200 dark:border-gray-700 pb-4">
-						<h1 className="text-3xl font-bold mb-2 text-gray-900 dark:text-gray-100">{post.title}</h1>
-						<time className="text-gray-500 dark:text-gray-400">{post.date}</time>
+				<article className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 sm:p-6 lg:p-8 border border-gray-200 dark:border-gray-700">
+					<header className="mb-6 sm:mb-8 border-b border-gray-200 dark:border-gray-700 pb-3 sm:pb-4">
+						<h1 className="text-2xl sm:text-3xl font-bold mb-2 text-gray-900 dark:text-gray-100 leading-tight">{post.title}</h1>
+						<time className="text-sm sm:text-base text-gray-500 dark:text-gray-400">{post.date}</time>
 					</header>
 					
-					<div className="prose dark:prose-invert prose-lg max-w-none markdown-content">
+					<div className="prose dark:prose-invert prose-sm sm:prose-lg max-w-none markdown-content">
 						<ReactMarkdown 
 							remarkPlugins={[remarkGfm]}
 							components={{
-								h1: (props) => <h1 className="text-2xl font-bold mt-8 mb-4 text-gray-900 dark:text-gray-100" {...props} />,
-								h2: (props) => <h2 className="text-xl font-bold mt-6 mb-3 text-gray-900 dark:text-gray-100" {...props} />,
-								h3: (props) => <h3 className="text-lg font-bold mt-4 mb-2 text-gray-900 dark:text-gray-100" {...props} />,
-								p: (props) => <p className="mb-4 leading-relaxed text-gray-800 dark:text-gray-200" {...props} />,
-								ul: (props) => <ul className="list-disc pl-6 mb-4 text-gray-800 dark:text-gray-200" {...props} />,
-								ol: (props) => <ol className="list-decimal pl-6 mb-4 text-gray-800 dark:text-gray-200" {...props} />,
+								h1: (props) => <h1 className="text-xl sm:text-2xl font-bold mt-6 sm:mt-8 mb-3 sm:mb-4 text-gray-900 dark:text-gray-100" {...props} />,
+								h2: (props) => <h2 className="text-lg sm:text-xl font-bold mt-4 sm:mt-6 mb-2 sm:mb-3 text-gray-900 dark:text-gray-100" {...props} />,
+								h3: (props) => <h3 className="text-base sm:text-lg font-bold mt-3 sm:mt-4 mb-1 sm:mb-2 text-gray-900 dark:text-gray-100" {...props} />,
+								p: (props) => <p className="mb-3 sm:mb-4 leading-relaxed text-gray-800 dark:text-gray-200 text-sm sm:text-base" {...props} />,
+								ul: (props) => <ul className="list-disc pl-4 sm:pl-6 mb-3 sm:mb-4 text-gray-800 dark:text-gray-200 text-sm sm:text-base" {...props} />,
+								ol: (props) => <ol className="list-decimal pl-4 sm:pl-6 mb-3 sm:mb-4 text-gray-800 dark:text-gray-200 text-sm sm:text-base" {...props} />,
 								li: (props) => <li className="mb-1 text-gray-800 dark:text-gray-200" {...props} />,
 								code: ({ className, children, ...props }) => {
 									const match = /language-(\w+)/.exec(className || '');
 									return match ? (
-										<pre className="bg-gray-100 dark:bg-gray-800 p-4 rounded overflow-x-auto mb-4">
+										<pre className="bg-gray-100 dark:bg-gray-800 p-2 sm:p-4 rounded overflow-x-auto mb-3 sm:mb-4 text-xs sm:text-sm">
 											<code className={className} {...props}>{children}</code>
 										</pre>
 									) : (
-										<code className="bg-gray-100 dark:bg-gray-700 px-1 py-0.5 rounded text-sm text-gray-800 dark:text-gray-200" {...props}>{children}</code>
+										<code className="bg-gray-100 dark:bg-gray-700 px-1 py-0.5 rounded text-xs sm:text-sm text-gray-800 dark:text-gray-200" {...props}>{children}</code>
 									);
 								},
-								a: (props) => <a className="text-blue-600 dark:text-blue-400 hover:underline" {...props} />,
-								blockquote: (props) => <blockquote className="border-l-4 border-blue-300 dark:border-blue-700 pl-4 italic mb-4 text-gray-700 dark:text-gray-300" {...props} />,
+								a: (props) => <a className="text-blue-600 dark:text-blue-400 hover:underline break-words" {...props} />,
+								blockquote: (props) => <blockquote className="border-l-4 border-blue-300 dark:border-blue-700 pl-3 sm:pl-4 italic mb-3 sm:mb-4 text-gray-700 dark:text-gray-300 text-sm sm:text-base" {...props} />,
 							}}
 						>
 							{post.content}

@@ -84,25 +84,25 @@ export default function EventTimeline() {
       }));
   
     return (
-      <div className="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 px-6 py-12">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl font-bold mb-8">イベント参加履歴</h2>
-          <div className="space-y-10">
+      <div className="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-center">イベント参加履歴</h2>
+          <div className="space-y-6 sm:space-y-10">
             {sortedTimelineData.map((group) => (
               <div key={group.year}>
-                <h3 className="text-2xl font-semibold text-blue-600 dark:text-blue-400 mb-4 border-b border-blue-200 dark:border-blue-700 pb-1">
+                <h3 className="text-xl sm:text-2xl font-semibold text-blue-600 dark:text-blue-400 mb-3 sm:mb-4 border-b border-blue-200 dark:border-blue-700 pb-1">
                   {group.year}
                 </h3>
-                <ul className="space-y-3 pl-3 border-l-2 border-gray-300 dark:border-gray-700 relative">
+                <ul className="space-y-2 sm:space-y-3 pl-2 sm:pl-3 border-l-2 border-gray-300 dark:border-gray-700 relative">
                   {group.events.map((event, idx) => (
-                    <li key={idx} className="pl-5 relative">
-                      <span className="absolute left-[-0.4rem] top-1.5 w-2 h-2 bg-blue-400 dark:bg-blue-600 rounded-full"></span>
+                    <li key={idx} className="pl-3 sm:pl-5 relative">
+                      <span className="absolute left-[-0.3rem] sm:left-[-0.4rem] top-1.5 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-400 dark:bg-blue-600 rounded-full"></span>
   
-                      <p className="font-medium">{event.title}</p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">{event.date}</p>
+                      <p className="font-medium text-sm sm:text-base">{event.title}</p>
+                      <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">{event.date}</p>
   
                       {event.description && (
-                        <p className="text-sm text-gray-500 dark:text-gray-400">{event.description}</p>
+                        <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">{event.description}</p>
                       )}
   
                       {event.url && (
@@ -110,7 +110,7 @@ export default function EventTimeline() {
                           href={event.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
+                          className="text-xs sm:text-sm text-blue-600 dark:text-blue-400 hover:underline inline-block mt-1"
                         >
                           🔗 デモ動画
                         </Link>
