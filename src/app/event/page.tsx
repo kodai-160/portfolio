@@ -69,6 +69,10 @@ const timelineData: YearGroup[] = [
         date: "2025/01/22〜01/24",
         title: "JANOG55 京都  NETCON委員",
       },
+      {
+        date: "2025/08/11〜08/16",
+        title: "セキュリティキャンプ全国大会 2025 専門B プロダクトセキュリティコース",
+      },
     ],
   },
 ];
@@ -100,7 +104,7 @@ export default function EventTimeline() {
   
                       <p className="font-medium text-sm sm:text-base">{event.title}</p>
                       <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">{event.date}</p>
-  
+  \
                       {event.description && (
                         <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">{event.description}</p>
                       )}
