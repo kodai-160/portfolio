@@ -4,18 +4,16 @@ import matter from 'gray-matter';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
-import { getLocalBlogPosts } from '@/lib/blog';
+import { getLocalBlogPosts, formatDate } from '@/lib/blog';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
+import Image from 'next/image';
 
-type Params = Promise<{
-  slug: string;
-}>;
-
-// 動的メタデータの生成
-export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
+// 動的メタデータの生成を修正（params を await する）
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
 	const { slug } = await params;
-	const post = getBlogPostBySlug(slug);
+	const post = await getBlogPostBySlug(slug);
 	if (!post) {
 		notFound();
 	}
@@ -33,32 +31,34 @@ export function generateStaticParams() {
 	}));
 }
 
-// 特定のスラッグのブログ記事を取得
-function getBlogPostBySlug(slug: string) {
+// 特定のスラッグのブログ記事を取得（非同期化）
+async function getBlogPostBySlug(slug: string) {
 	const blogsDirectory = path.join(process.cwd(), 'src/content/blogs');
 	const fullPath = path.join(blogsDirectory, `${slug}.md`);
-	
-	if (!fs.existsSync(fullPath)) {
+
+	try {
+		await fs.promises.access(fullPath, fs.constants.F_OK);
+		const fileContents = await fs.promises.readFile(fullPath, 'utf8');
+		const { data, content } = matter(fileContents);
+
+		return {
+			slug,
+			title: data.title || slug,
+			// date が Date オブジェクトの場合も文字列に変換して返す
+			date: data && data.date ? formatDate(data.date) : '',
+			content,
+			excerpt: data.excerpt || '',
+		};
+	} catch {
 		return null;
 	}
-	
-	const fileContents = fs.readFileSync(fullPath, 'utf8');
-	const { data, content } = matter(fileContents);
-	
-	return {
-		slug,
-		title: data.title || slug,
-		date: data.date || '',
-		content,
-		excerpt: data.excerpt || '',
-	};
 }
 
-// ブログ詳細ページのコンポーネント
-export default async function BlogPost({ params }: { params: Params }) {
+// ブログ詳細ページのコンポーネントを修正（params を await する）
+export default async function BlogPost({ params }: { params: Promise<{ slug: string }> }) {
 	const { slug } = await params;
-	const post = getBlogPostBySlug(slug);
-	
+	const post = await getBlogPostBySlug(slug);
+
 	if (!post) {
 		notFound();
 	}
@@ -85,6 +85,7 @@ export default async function BlogPost({ params }: { params: Params }) {
 					<div className="prose dark:prose-invert prose-sm sm:prose-lg max-w-none markdown-content">
 						<ReactMarkdown 
 							remarkPlugins={[remarkGfm]}
+							rehypePlugins={[rehypeRaw]}
 							components={{
 								h1: (props) => <h1 className="text-xl sm:text-2xl font-bold mt-6 sm:mt-8 mb-3 sm:mb-4 text-gray-900 dark:text-gray-100" {...props} />,
 								h2: (props) => <h2 className="text-lg sm:text-xl font-bold mt-4 sm:mt-6 mb-2 sm:mb-3 text-gray-900 dark:text-gray-100" {...props} />,
@@ -105,6 +106,21 @@ export default async function BlogPost({ params }: { params: Params }) {
 								},
 								a: (props) => <a className="text-blue-600 dark:text-blue-400 hover:underline break-words" {...props} />,
 								blockquote: (props) => <blockquote className="border-l-4 border-blue-300 dark:border-blue-700 pl-3 sm:pl-4 italic mb-3 sm:mb-4 text-gray-700 dark:text-gray-300 text-sm sm:text-base" {...props} />,
+								img: ({ src, alt }) => {
+									if (!src) return null;
+									return (
+										<div className="relative w-full h-[300px] my-4">
+											<Image
+												src={src}
+												alt={alt ?? ''}
+												fill
+												className="object-contain rounded"
+												sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+												priority={true}
+											/>
+										</div>
+									);
+								},
 							}}
 						>
 							{post.content}

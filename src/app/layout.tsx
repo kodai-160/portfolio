@@ -5,6 +5,9 @@ import Navigation from "@/components/Navigation";
 export const metadata: Metadata = {
   title: "My Portfolio",
   description: "Created by Kodai",
+};
+
+export const viewport = {
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "white" },
     { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },

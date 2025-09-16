@@ -65,6 +65,30 @@ export const externalPosts: BlogPost[] = [
   },
 ];
 
+// 日付を YYYY/MM/DD の文字列に正規化
+export function formatDate(value: Date): string {
+	// value が既に文字列か Date かを受けて処理
+	if (!value) return '';
+	const d = new Date(value);
+	if (isNaN(d.getTime())) {
+		// パースできない場合は文字列として返す
+		return String(value);
+	}
+	const yyyy = d.getFullYear();
+	const mm = String(d.getMonth() + 1).padStart(2, '0');
+	const dd = String(d.getDate()).padStart(2, '0');
+	return `${yyyy}/${mm}/${dd}`;
+}
+
+// 文字列日付をタイムスタンプに変換（ソート用）
+function toTimestamp(dateStr: string): number {
+	if (!dateStr) return 0;
+	// 'YYYY/MM/DD' や 'YYYY-MM-DD' に対応
+	const normalized = dateStr.replace(/\//g, '-');
+	const t = new Date(normalized).getTime();
+	return isNaN(t) ? 0 : t;
+}
+
 // マークダウンブログの読み込み
 export function getLocalBlogPosts(): BlogPost[] {
   try {
@@ -89,16 +113,19 @@ export function getLocalBlogPosts(): BlogPost[] {
         // Front Matter（メタデータ）を解析
         const { data, content } = matter(fileContents);
         
+        // 日付を正規化（Date オブジェクトや文字列を YYYY/MM/DD にする）
+        const date = data && data.date ? formatDate(data.date) : new Date().toISOString().split('T')[0].replace(/-/g, '/');
+        
         return {
           slug,
           title: data.title || slug,
-          date: data.date || new Date().toISOString().split('T')[0],
+          date,
           excerpt: data.excerpt || content.substring(0, 150) + '...',
           content,
           isLocal: true,
         };
       })
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      .sort((a, b) => toTimestamp(b.date) - toTimestamp(a.date));
       
     return posts;
   } catch (error) {
@@ -110,5 +137,10 @@ export function getLocalBlogPosts(): BlogPost[] {
 // すべてのブログ記事を取得
 export function getAllBlogPosts(): BlogPost[] {
   const localPosts = getLocalBlogPosts();
-  return [...localPosts, ...externalPosts];
+  const allPosts = [...localPosts, ...externalPosts];
+  
+  // 日付を文字列として比較（安定したソート）
+  return allPosts.sort((a, b) => {
+    return toTimestamp(b.date) - toTimestamp(a.date);
+  });
 }
