@@ -1,7 +1,6 @@
 ---
 title: "FFRI × NFLabs. Cybersecurity Challenge 2025 Writeup & Upsolve"
 date: 2025-09-15
-description: "参加記と一部アップソルブ。SolrのLFI経由でflag取得まで。"
 ---
 
 # FFRI × NFLabs. Cybersecurity Challenge 2025 Writeup
