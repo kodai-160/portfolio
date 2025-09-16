@@ -8,7 +8,6 @@ import { getLocalBlogPosts, formatDate } from '@/lib/blog';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
-import Image from 'next/image';
 
 // 動的メタデータの生成を修正（params を await する）
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -63,6 +62,63 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
 		notFound();
 	}
 
+	// 画像パス解決ヘルパー（サーバーサイドで実行）
+	function resolveImageSrc(src: string): string {
+		if (!src) return src;
+
+		// 既に data:URI や外部 URL ならそのまま返す
+		if (/^data:/.test(src) || /^https?:\/\//.test(src)) return src;
+
+		// 正規化（先頭の ./ や / を取り除くが public 記法の / は後でチェック）
+		const raw = String(src);
+		// 先に public 配下のパスとして実在チェック（例: /images/foo.png）
+		if (raw.startsWith('/')) {
+			const publicFs = path.join(process.cwd(), 'public', raw.replace(/^\//, ''));
+			if (fs.existsSync(publicFs)) {
+				// ブラウザからそのままアクセスできる public パスを返す
+				return raw;
+			}
+			// もし /src/... のような絶対参照が来ている場合も試す
+			const absFs = path.join(process.cwd(), raw.replace(/^\//, ''));
+			if (fs.existsSync(absFs)) {
+				// data URI に変換して返す
+				const buffer = fs.readFileSync(absFs);
+				const ext = path.extname(absFs).toLowerCase();
+				const mime = ext === '.png' ? 'image/png' :
+					ext === '.jpg' || ext === '.jpeg' ? 'image/jpeg' :
+					ext === '.gif' ? 'image/gif' :
+					ext === '.svg' ? 'image/svg+xml' :
+					ext === '.webp' ? 'image/webp' : 'application/octet-stream';
+				return `data:${mime};base64,${buffer.toString('base64')}`;
+			}
+		}
+
+		// 相対パス候補: 記事フォルダ内, src/content/image, src/content 以下を順に探す
+		const clean = raw.replace(/^\.\/+/, '').replace(/^\//, '');
+		const candidates = [
+			path.join(process.cwd(), 'src', 'content', 'blogs', slug, clean),
+			path.join(process.cwd(), 'src', 'content', 'image', clean),
+			path.join(process.cwd(), 'src', 'content', clean),
+			path.join(process.cwd(), 'src', 'content', 'blogs', clean),
+		];
+
+		for (const candidate of candidates) {
+			if (fs.existsSync(candidate)) {
+				const buffer = fs.readFileSync(candidate);
+				const ext = path.extname(candidate).toLowerCase();
+				const mime = ext === '.png' ? 'image/png' :
+					ext === '.jpg' || ext === '.jpeg' ? 'image/jpeg' :
+					ext === '.gif' ? 'image/gif' :
+					ext === '.svg' ? 'image/svg+xml' :
+					ext === '.webp' ? 'image/webp' : 'application/octet-stream';
+				return `data:${mime};base64,${buffer.toString('base64')}`;
+			}
+		}
+
+		// 最終フォールバック: 元の src を返す（外部 CDN 等の場合）
+		return raw;
+	}
+
 	return (
 		<main className="min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
 			<div className="max-w-4xl mx-auto">
@@ -108,18 +164,9 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
 								blockquote: (props) => <blockquote className="border-l-4 border-blue-300 dark:border-blue-700 pl-3 sm:pl-4 italic mb-3 sm:mb-4 text-gray-700 dark:text-gray-300 text-sm sm:text-base" {...props} />,
 								img: ({ src, alt }) => {
 									if (!src) return null;
-									return (
-										<div className="relative w-full h-[300px] my-4">
-											<Image
-												src={src}
-												alt={alt ?? ''}
-												fill
-												className="object-contain rounded"
-												sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-												priority={true}
-											/>
-										</div>
-									);
+									const finalSrc = resolveImageSrc(String(src));
+									// data:URI / public path / external URL すべて img タグで表示
+									return <img src={finalSrc} alt={alt ?? ''} className="max-w-full h-auto rounded my-4" />;
 								},
 							}}
 						>
