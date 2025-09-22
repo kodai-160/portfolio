@@ -204,3 +204,16 @@ def isPrime(N, false_positive_prob=1e-6, randfunc=None):
     rounds = int(math.ceil(-math.log(false_positive_prob)/math.log(4)))
     return bool(_rabinMillerTest(N, rounds, randfunc))
 ```
+
+- `_fastmath`でC実装が使えるのであれば高速判定
+- `sieve_base`で小さい素数を判定して先にはじく
+- 後はミラーラビン法で素数かどうかを判定していく
+
+## Miller–Rabin(ミラーラビン)素数判定法
+- 素数生成アルゴリズム
+- 確率的アルゴリズム
+
+### 定理
+奇素数　$p = 2^st+1  \ (t\ \text{奇数})$ と $p$ と互いに素な自然数について以下のいずれかが成り立つ
+1. $$ a^t \equiv 1 \pmod p $$
+2. $$ \exists\, r\in\{0,1,\dots,s-1\}\ \text{s.t.}\ a^{2^r d} \equiv -1 \pmod p $$
