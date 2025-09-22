@@ -214,6 +214,8 @@ def isPrime(N, false_positive_prob=1e-6, randfunc=None):
 - 確率的アルゴリズム
 
 ### 定理
-奇素数　$p = 2^st+1  \ (t\ \text{奇数})$ と $p$ と互いに素な自然数について以下のいずれかが成り立つ
-1. $$ a^t \equiv 1 \pmod p $$
-2. $$ \exists\, r\in\{0,1,\dots,s-1\}\ \text{s.t.}\ a^{2^r d} \equiv -1 \pmod p $$
+pを奇素数とし、下のように分解できるとする<br>
+![alt text](image.png)
+
+`整数αが1 < α < p-1`を満たすとき以下が成り立つ<br>
+![alt text](image-1.png)
