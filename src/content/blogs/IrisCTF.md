@@ -1,5 +1,5 @@
 ---
-title: "FFRI × NFLabs. Cybersecurity Challenge 2025 Writeup & Upsolve"
+title: "irisctf 2025 Web upsolve Upsolve"
 date: 2025-09-16
 ---
 

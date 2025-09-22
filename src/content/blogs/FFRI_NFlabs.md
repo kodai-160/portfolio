@@ -5,7 +5,8 @@ date: 2025-09-15
 
 # FFRI × NFLabs. Cybersecurity Challenge 2025 Writeup
 
-FFRI × NFLabs. Cybersecurity Challenge 2025 に参加し、結果は **13位** でした。Top10入りを目標にしていたので悔しい……。
+FFRI × NFLabs. Cybersecurity Challenge 2025 に参加し、結果は **13位** でした。<br>
+Top10入りを目標にしていたので悔しい……。
 
 ![ranking](/src/content/image/FFRI_NFLabs_ranking.png)
 
