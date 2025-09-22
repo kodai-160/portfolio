@@ -211,11 +211,24 @@ def isPrime(N, false_positive_prob=1e-6, randfunc=None):
 
 ## Miller–Rabin(ミラーラビン)素数判定法
 - 素数生成アルゴリズム
-- 確率的アルゴリズム
+- 確率的アルゴリズムで検定に通った数が素数であると高い確率で信じられるアルゴリズム
 
 ### 定理
 pを奇素数とし、下のように分解できるとする<br>
 ![alt text](image.png)
 
-`整数αが1 < α < p-1`を満たすとき以下が成り立つ<br>
+`整数α`が`1 < α < p-1`を満たすとき以下が成り立つ<br>
 ![alt text](image-1.png)
+
+### この定理を理解する上で必要な定理 <フェルマーの小定理>
+> 任意の素数`p`とpと互いに素な自然数`α`について以下が成り立つ<br>
+> ![alt text](image-2.png)
+
+### なぜMiller–Rabin素数判定法がなりたつのか？
+![alt text](image-3.png)
+
+### アルゴリズム(まとめる時間なかったです。すいません)
+
+### 参考資料
+- [Miller–Rabin(ミラーラビン)素数判定法について理解したい](https://qiita.com/zu_rin/items/25521b5870389e0f85bf)
+- [ミラー–ラビン素数判定法](https://ja.wikipedia.org/wiki/%E3%83%9F%E3%83%A9%E3%83%BC%E2%80%93%E3%83%A9%E3%83%93%E3%83%B3%E7%B4%A0%E6%95%B0%E5%88%A4%E5%AE%9A%E6%B3%95)
