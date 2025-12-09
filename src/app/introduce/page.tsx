@@ -32,15 +32,15 @@ export default function Introduce() {
               <span>
                 研究内容：
                 <span className="whitespace-nowrap">
-                  VM・Podの混在環境におけるKubernetesの適切な負荷分散
+                  Kubernetes環境におけるノード実利用率を用いた負荷分散
                 </span>
               </span>
             </li>
             <li className="flex items-start text-sm sm:text-base lg:text-lg">
-              <span>趣味：ポケポケ、ドライブ、LIVEに行く</span>
+              <span>趣味：ドライブ、LIVEに行く</span>
             </li>
             <li className="flex items-center text-sm sm:text-base lg:text-lg">
-              CTFチーム：sknb
+              CTFチーム：sknb, Saikyo Hacking Club
             </li>
             <li className="flex items-start text-sm sm:text-base lg:text-lg">
               <span>興味分野：webセキュリティ、Network、クラウド</span>
