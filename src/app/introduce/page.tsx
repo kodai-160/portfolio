@@ -32,7 +32,7 @@ export default function Introduce() {
               <span>
                 研究内容：
                 <span className="whitespace-nowrap">
-                  Kubernetes環境におけるノード実利用率を用いた負荷分散
+                  ノード実利用率を用いたカスタムスケジューラの作成と評価
                 </span>
               </span>
             </li>

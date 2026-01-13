@@ -48,6 +48,11 @@ export default function Navigation() {
                   ブログ
                 </Link>
               </li>
+              <li>
+                <a href="https://example.com" target="_blank" rel="noopener noreferrer" className="hover:text-black dark:hover:text-white border-b-2 border-transparent hover:border-black dark:hover:border-white cursor-pointer">
+                  外部サイト
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -96,6 +101,11 @@ export default function Navigation() {
                 <Link href="/blog" className="block px-3 py-2 text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white" onClick={() => setIsMenuOpen(false)}>
                   ブログ
                 </Link>
+              </li>
+              <li>
+                <a href="https://kodai-160.github.io/" target="_blank" rel="noopener noreferrer" className="block px-3 py-2 text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white" onClick={() => setIsMenuOpen(false)}>
+                  writeup置き場
+                </a>
               </li>
             </ul>
           </div>
