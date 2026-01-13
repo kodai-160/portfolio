@@ -59,8 +59,8 @@ export default function Home() {
             </Link>
           </li>
           <li>
-            <a href="https://kodai-160.github.io/" target="_blank" rel="noopener noreferrer" className="block px-3 py-2 text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white" onClick={() => setIsMenuOpen(false)}>
-                  writeup置き場
+            <a href="https://kodai-160.github.io/" target="_blank" rel="noopener noreferrer" className="block px-3 py-2 text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">
+              writeup置き場
             </a>
           </li>
         </ul>
